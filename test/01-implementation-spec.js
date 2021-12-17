@@ -33,16 +33,27 @@ describe ('Phase 1', function () {
   it('can insert a key/value pair', function () {
 
     hashTable.insert("key1", "value1");
+    hashTable.insert("key-2", "val-2");
+    hashTable.insert("key-3", "val-3");
 
-    expect(hashTable.count).to.equal(1);
+    expect(hashTable.count).to.equal(3);
   });
 
 
   it('can read an inserted key/value pair', function () {
 
-    hashTable.insert("key1", "value1");
+    hashTable.insert("key1", "value1")
+    hashTable.insert("key2", "value2")
+    hashTable.insert("key3", "value3")
+    hashTable.insert("key5", "value5")
+    hashTable.insert("key9", "value9")
+    hashTable.insert("key10", "value10")
 
     expect(hashTable.read("key1")).to.equal("value1");
+    expect(hashTable.read("key2")).to.equal("value2");
+    expect(hashTable.read("key3")).to.equal("value3");
+    expect(hashTable.read("key5")).to.equal("value5");
+    expect(hashTable.read("key9")).to.equal("value9");
   });
 
 
@@ -121,12 +132,21 @@ describe ('Phase 1', function () {
     hashTable.insert("key1", "value1")
     hashTable.insert("key2", "value2")
     hashTable.insert("key3", "value3")
+    hashTable.insert("key5", "value5")
+    hashTable.insert("key9", "value9")
+    hashTable.insert("key10", "value10")
+
     hashTable.delete("key2")
+    hashTable.delete("key9")
+    hashTable.delete("key10")
 
     expect(hashTable.read("key1")).to.equal("value1");
+    expect(hashTable.read("key2")).to.equal(undefined)
+    expect(hashTable.read("key9")).to.equal(undefined)
+    expect(hashTable.delete("key2")).to.equal(undefined)
     expect(hashTable.read("key3")).to.equal("value3");
 
-    expect(hashTable.count).to.equal(2);
+    expect(hashTable.count).to.equal(3);
   });
 
 });
