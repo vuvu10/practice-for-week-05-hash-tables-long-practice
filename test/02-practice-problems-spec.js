@@ -2,7 +2,7 @@ const { expect } = require('chai');
 
 const [anagrams, commonElements, duplicate, twoSum, wordPattern] = require("../phases/02-practice-problems");
 
-describe ('Phase 2', function () {
+describe ('Phase 2 - Hash table practice problems', function () {
 
   it('`anagrams` tests if two strings are anagrams of each other', function () {
 

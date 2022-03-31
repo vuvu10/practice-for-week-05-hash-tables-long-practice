@@ -25,7 +25,7 @@ class HashTable { // get O(1), set O(1), deleteKey O(1)
 
   hashMod(key) {
     // Get index after hashing
-    return this.hash(key) % this.data.length;
+    return this.hash(key) % this.capacity;
   }
 
 

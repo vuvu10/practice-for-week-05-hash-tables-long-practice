@@ -1,9 +1,9 @@
 # Long Practice: Hash Tables
 
-Hash tables are an incredbly important data structure. In this practice you
+Hash tables are an incredibly important data structure. In this practice, you
 will learn about the underlying mechanics of the methods within hash tables,
 how they correlate to the data structure's efficiency, and the kinds of
-problems where they are an optimal tool to utilize. Along with:
+problems where they are an optimal tool to utilize. You will also:
 
 - Compare and contrast the properties and operations of an Array, Linked List,
   and Hash Table
@@ -17,8 +17,8 @@ problems where they are an optimal tool to utilize. Along with:
 ## Setup
 
 1. Clone the starter from the **Download** link at the bottom of this page
-2. Install all packages by typing `npm install`
-3. Run specs with `npm test`
+2. Run `npm install` to install dependencies.
+3. Run `npm test` to run specs.
 
 ## Phases
 

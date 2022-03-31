@@ -2,7 +2,7 @@ const { expect } = require('chai');
 
 const HashTable = require("../phases/01-implementation");
 
-describe ('Phase 1', function () {
+describe ('Phase 1 - Hash table implementation', function () {
 
   let hashTable;
 
@@ -32,15 +32,80 @@ describe ('Phase 1', function () {
 
   it('can insert a key/value pair', function () {
 
+    hashTable = new HashTable(4);
+
     hashTable.insert("key1", "value1");
-    hashTable.insert("key-2", "val-2");
-    hashTable.insert("key-3", "val-3");
+    hashTable.insert("key2", "value2");
+    hashTable.insert("key3", "value3");
+
+    expect(hashTable.data[2].key).to.equal("key1")
+    expect(hashTable.data[3].key).to.equal("key2")
+    expect(hashTable.data[0].key).to.equal("key3")
+
+    expect(hashTable.data[2].value).to.equal("value1")
+    expect(hashTable.data[3].value).to.equal("value2")
+    expect(hashTable.data[0].value).to.equal("value3")
 
     expect(hashTable.count).to.equal(3);
   });
 
 
+  it('can insert and handle hash collisions', function () {
+
+    expect(hashTable.capacity).to.equal(2);
+
+    hashTable.insert("key2", "value2");
+    hashTable.insert("key4", "value4");
+
+    expect(hashTable.data[1].next.key).to.equal("key2")
+    expect(hashTable.data[1].key).to.equal("key4")
+
+    expect(hashTable.data[1].next.value).to.equal("value2")
+    expect(hashTable.data[1].value).to.equal("value4")
+  });
+
+
+  it('can insert and handle same key, value updates', function () {
+
+    hashTable = new HashTable(6);
+
+    hashTable.insert("key4", "value4");
+    hashTable.insert("key13", "value13");
+    hashTable.insert("key19", "value19");
+
+    expect(hashTable.data[3].key).to.equal("key19")
+    expect(hashTable.data[3].value).to.equal("value19")
+    expect(hashTable.data[3].next.key).to.equal("key13")
+    expect(hashTable.data[3].next.value).to.equal("value13")
+    expect(hashTable.data[3].next.next.key).to.equal("key4")
+    expect(hashTable.data[3].next.next.value).to.equal("value4")
+
+    hashTable.insert("key13", "value20000");
+
+    expect(hashTable.data[3].next.key).to.equal("key13")
+    expect(hashTable.data[3].next.value).to.equal("value20000")
+  });
+
+
   it('can read an inserted key/value pair', function () {
+
+    hashTable = new HashTable(4);
+
+    hashTable.insert("key1", "value1")
+    hashTable.insert("key2", "value2")
+    hashTable.insert("key3", "value3")
+
+    expect(hashTable.read("key1")).to.equal("value1");
+    expect(hashTable.read("key2")).to.equal("value2");
+    expect(hashTable.read("key3")).to.equal("value3");
+
+    expect(hashTable.read("key5")).to.equal(undefined);
+  });
+
+
+  it('can read an inserted key/value pair including collisions', function () {
+
+    expect(hashTable.capacity).to.equal(2);
 
     hashTable.insert("key1", "value1")
     hashTable.insert("key2", "value2")
@@ -54,27 +119,10 @@ describe ('Phase 1', function () {
     expect(hashTable.read("key3")).to.equal("value3");
     expect(hashTable.read("key5")).to.equal("value5");
     expect(hashTable.read("key9")).to.equal("value9");
-  });
+    expect(hashTable.read("key10")).to.equal("value10");
 
-
-  it('can handle hash collisions', function () {
-
-    expect(hashTable.capacity).to.equal(2);
-
-    hashTable.insert("key1", "value1");
-    hashTable.insert("key9", "value9");
-    hashTable.insert("key18", "value18");
-    hashTable.insert("key27", "value27");
-    hashTable.insert("key36", "value36");
-    hashTable.insert("key45", "value45");
-
-    expect(hashTable.read("key1")).to.equal("value1");
-    expect(hashTable.read("key9")).to.equal("value9");
-    expect(hashTable.read("key18")).to.equal("value18");
-    expect(hashTable.read("key27")).to.equal("value27");
-    expect(hashTable.read("key36")).to.equal("value36");
-    expect(hashTable.read("key45")).to.equal("value45");
-  });
+    expect(hashTable.read("key20")).to.equal(undefined);
+  })
 
 
   it('can double in size while retaining data', function () {
@@ -136,17 +184,33 @@ describe ('Phase 1', function () {
     hashTable.insert("key9", "value9")
     hashTable.insert("key10", "value10")
 
+    // check for values
+    expect(hashTable.read("key2")).to.equal("value2")
+    expect(hashTable.read("key9")).to.equal("value9")
+    expect(hashTable.read("key10")).to.equal("value10");
+
+    expect(hashTable.count).to.equal(6);
+
+    // delete key value pairs
     hashTable.delete("key2")
     hashTable.delete("key9")
     hashTable.delete("key10")
 
+    // check for values
     expect(hashTable.read("key1")).to.equal("value1");
+    expect(hashTable.read("key3")).to.equal("value3");
+    expect(hashTable.read("key5")).to.equal("value5");
+
     expect(hashTable.read("key2")).to.equal(undefined)
     expect(hashTable.read("key9")).to.equal(undefined)
-    expect(hashTable.delete("key2")).to.equal(undefined)
-    expect(hashTable.read("key3")).to.equal("value3");
+    expect(hashTable.read("key10")).to.equal(undefined)
 
     expect(hashTable.count).to.equal(3);
+
+    // return string if key doesn't exist
+    expect(hashTable.delete("key2")).to.equal("Key not found")
+    expect(hashTable.delete("key10")).to.equal("Key not found")
+
   });
 
 });
