@@ -34,6 +34,34 @@ class HashTable { // get O(1), set O(1), deleteKey O(1)
 
   insert(key, value) {
     // Your code here
+    const index = this.hashMod(key);
+
+    let current = this.data[index];
+
+    if (!current) {
+      this.data[index] = new KeyValuePair(key, value);
+      this.count++;
+      return;
+    }
+
+    if (current.key === key) {
+      current.value = value;
+      return;
+
+    }
+
+    while (current.next) {
+      if (current.next.key === key) {
+        current.next.value = value;
+        return;
+      }
+      current = current.next;
+    }
+
+    const newPair = new KeyValuePair(key, value);
+    newPair.next = this.data[index];
+    this.data[index] = newPair;
+    this.count++;
   }
 
 
