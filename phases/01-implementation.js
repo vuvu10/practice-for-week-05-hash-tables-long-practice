@@ -6,7 +6,8 @@ class KeyValuePair {
   }
 }
 
-class HashTable { // get O(1), set O(1), deleteKey O(1)
+class HashTable {
+  // get O(1), set O(1), deleteKey O(1)
 
   constructor(numBuckets = 8) {
     // Initialize your buckets here
@@ -31,50 +32,36 @@ class HashTable { // get O(1), set O(1), deleteKey O(1)
     return this.hash(key) % this.capacity;
   }
 
-  insertNoCollision(key, value) {
-    const index = this.hashMod(key);
-
-    if (this.data[index] !== null) {
-      throw new Error("Collision detected");
-    }
-    this.data[index] = new KeyValuePair(key, value);
-    this.count++;
-  }
-
-  insertWithHasCollisions(key, value) {
-    const index = this.hashMod(key);
-
-    const currentHead = this.data[index];
-
-    const newPair = new KeyValuePair(key, value);
-
-    newPair.next = currentHead;
-
-    this.data[index] = newPair;
-
-    this.count++;
-
-  }
-
 
   insert(key, value) {
     // Your code here
     const index = this.hashMod(key);
-    const newNode = new KeyValuePair(key, value);
+
 
     let current = this.data[index];
 
     if (!current) {
-      this.data[index] = newNode;
-    } else {
-      while (current) {
-        if (current.key === key) {
-          throw new Error("Dupicate key found");
-        }
-        current = current.next;
-      }
-      current.next = newNode;
+      this.data[index] = new KeyValuePair(key, value);
+      this.count++;
+      return;
     }
+
+    if (current.key === key) {
+      current.value = value;
+      return;
+    }
+
+    while (current.next) {
+      if (current.next.key === key) {
+        current.next.value = value;
+        return;
+      }
+      current = current.next;
+    }
+
+    const newPair = new KeyValuePair(key, value);
+    newPair.next = this.data[index];
+    this.data[index] = newPair;
     this.count++;
   }
 
@@ -93,7 +80,7 @@ class HashTable { // get O(1), set O(1), deleteKey O(1)
       current = current.next;
     }
 
-    return null;
+    return undefined;
   }
 
 
@@ -116,38 +103,35 @@ class HashTable { // get O(1), set O(1), deleteKey O(1)
 
 
   delete(key) {
-    // Your code here
-    const index = this.hashMod(key);
 
-    let current = this.data[index];
+  const index = this.hashMod(key);
+  let current = this.data[index];
 
-    let prev = null;
-
-
-
-    while (current) {
-      if (current.key === key) {
-          if (prev) {
-            prev.next = current.next;
-          } else {
-            this.data[index] = current.next;
-          }
-          this.count--;
-          return;
-        }
-        prev = current;
-        current = current.next;
-      }
-      return "Key not found";
-
-    }
-
-
+  if (!current) {
+    return undefined;
   }
 
+  if (current.key === key) {
+    this.data[index] = current.next;
+    this.count--;
+    return current.value;
+  }
+  while (current.next) {
+    if (current.next.key === key) {
+      const value = current.next.value;
+      current.next = current.next.next;
+      this.count--;
+      return value;
+    }
+    current = current.next;
+  }
+  return undefined;
+
+}
 
 
 
+}
 
 
 
